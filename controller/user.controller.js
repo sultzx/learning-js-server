@@ -1,4 +1,7 @@
-import User from "../model/User";
+import User from "../model/User.js";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import config from 'config'
 
 export const registration = async (req, res) => {
     try {
@@ -49,6 +52,8 @@ export const registration = async (req, res) => {
     try {
         
         const {login, password} = req.body
+
+        let user = ''
 
         const validateEmail = (email) => {
             return email.match(
@@ -131,7 +136,7 @@ export const registration = async (req, res) => {
 
   export const update = async (req, res) => {
     try {
-        const {username, lastname, firstname, patronymic, phone, birthdate} = req.body
+        const {username, fullname, phone} = req.body
         
         const userId = req.userId
 
@@ -140,7 +145,7 @@ export const registration = async (req, res) => {
         await User.updateOne({
             _id: user._id,
         }, {
-            username, lastname, firstname, patronymic, phone, birthdate
+            username, fullname, phone
         })
 
         res.status(200).json({

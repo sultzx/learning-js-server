@@ -7,11 +7,9 @@ const schema = new mongoose.Schema({
     },
     username: String,
     hashedPassword: String,
-    lastname: String,
-    firstname: String,
-    patronymic: String,
+    fullname: String,
     phone: String,
-    birthdate: Date,
+    avatarUrl: String,
     isAdmin: {
         type: Boolean,
         default: false
