@@ -242,6 +242,7 @@ export const setScore = async (req, res) => {
     })
 
     currentScores.forEach(async (currentScore, i) => {
+
       if (currentScore.lesson == chapter) {
 
         switch (lesson) {
@@ -263,16 +264,39 @@ export const setScore = async (req, res) => {
         }
         console.log(currentScore)
 
+        let numbers = [
+          currentScore.first,  currentScore.second,  currentScore.third,  currentScore.fourth,  currentScore.fifth
+        ]
+
+        let completed = 0
+
+        let correct = 0
+
+        let wrong = 0
+
+        numbers.forEach(number => {
+          if (number != -1) {
+            completed++
+          }
+          if (number == 1) {
+            correct++
+          }
+           if (number == 0){
+            wrong++
+           }
+        })
+
+        console.log(numbers)
+
+        currentScore.completed = completed == 5
+        currentScore.correct = correct
+        currentScore.wrong = wrong
+
         await currentScore.save()
+
       }
 
-
-
     })
-
-
-
-
 
     res.status(200).json({
       message: 'Жауап сәтті қабылданды'
@@ -288,9 +312,52 @@ export const getScore = async (req, res) => {
 
     const userId = req.userId
 
+    const {param} = req.params
+
     const rating = await Rating.findOne({
       user: userId
+    }).populate('scores').exec()
+
+    let completed = 0
+    let correct = 0
+    let wrong = 0
+
+
+    rating.scores.forEach(score => {
+
+      if (score && score.completed && score.completed == true) {
+        completed++
+      }
+
+      correct += score && score.correct && score.correct
+      wrong += score && score.wrong && score.wrong
+
     })
+
+    rating.completed = 5 * completed
+    rating.correct = correct
+    rating.wrong = wrong
+
+    await rating.save()
+
+    rating.scores.forEach(score => {
+      if (score.lesson == param) {
+       res.status(200).json(score)
+      }
+    })
+
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
+
+export const getRating = async (req, res) => {
+  try {
+    const userId = req.userId
+    const rating = await Rating.find({
+      user: userId
+    }).populate('scores').exec()
 
     res.status(200).json(rating)
 
@@ -298,5 +365,18 @@ export const getScore = async (req, res) => {
     res.status(500).json(error.message)
   }
 }
+
+export const getAllRatings = async (req, res) => {
+  try {
+    
+    const rating = await Rating.find().sort({correct: -1}).limit(10).populate('scores').populate('user').exec()
+
+    res.status(200).json(rating)
+
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
 
 

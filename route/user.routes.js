@@ -13,6 +13,8 @@ userRouter.post('/auth/login', validation.login, validationHandler, controller.l
 userRouter.get('/me', checkAuth, controller.me)
 userRouter.patch('/me/update', checkAuth, controller.update)
 userRouter.patch('/me/set-score', checkAuth, controller.setScore)
-userRouter.get('/me/get-score', checkAuth, controller.getScore)
+userRouter.get('/me/get-score/:param', checkAuth, controller.getScore)
+userRouter.get('/me/get-rating/', checkAuth, controller.getRating)
+userRouter.get('/get-all-ratings/', controller.getAllRatings)
 
 export default userRouter

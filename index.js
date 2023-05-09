@@ -6,6 +6,7 @@ import cors from 'cors'
 // import studyRouter from './route/study.routes.js'
 import userRouter from './route/user.routes.js'
 import uploadRouter from './route/upload.routes.js'
+import bootcampRouter from './route/bootcamp.routes.js'
 
 const app = express()
 
@@ -27,7 +28,7 @@ const start = async () => {
         console.log(`database error\tmessage: ${error.message}`)
     }
 
-    // app.use('/api/study', studyRouter)
+    app.use('/api/bootcamp',bootcampRouter)
     app.use('/api/upload', uploadRouter)
     app.use('/api/user', userRouter)
 

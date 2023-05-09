@@ -22,6 +22,18 @@ const schema = new mongoose.Schema({
         type: Number,
         default: -1
     },
+    correct: {
+        type: Number,
+        default: 0
+    },
+    wrong: {
+        type: Number,
+        default: 0
+    },
+    completed: {
+        type: Boolean,
+        default: false
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
